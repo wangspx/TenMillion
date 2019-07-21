@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:mysql://47.107.120.53:9000/luck
+    username: root
+    password: spwang@1231
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
