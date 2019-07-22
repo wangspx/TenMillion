@@ -20,6 +20,6 @@ public class InitData implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        service.start();
+        service.generateAllCombination();
     }
 }
