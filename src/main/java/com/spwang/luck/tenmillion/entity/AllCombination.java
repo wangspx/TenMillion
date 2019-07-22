@@ -1,18 +1,17 @@
 package com.spwang.luck.tenmillion.entity;
 
+import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * @author spwang 2019/7/20 12:51 PM
- * @version 0.0.1
- * @since 0.0.1
+ * @author spwang
+ * @version 1.0.0
+ * @date 2019/7/22 12:03
  */
-@EqualsAndHashCode(callSuper = true)
-@ToString
 @Data
 public class AllCombination extends BaseEntity {
-    /** 6个红球和1个篮球的组合 */
+    /**
+     * 6个红球和1个篮球的组合
+     */
     private String combination;
 }

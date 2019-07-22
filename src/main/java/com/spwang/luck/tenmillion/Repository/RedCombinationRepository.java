@@ -13,7 +13,19 @@ import java.util.List;
  */
 @Mapper
 public interface RedCombinationRepository {
-    Long count();
+    int deleteByPrimaryKey(Long id);
 
-    Long insertList(@Param("list") List<RedCombination> list);
+    int insert(RedCombination record);
+
+    int insertSelective(RedCombination record);
+
+    int insertList(@Param("list")List<RedCombination> list);
+
+    RedCombination selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(RedCombination record);
+
+    int updateByPrimaryKey(RedCombination record);
+
+	Long count();
 }

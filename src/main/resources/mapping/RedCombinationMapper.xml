@@ -1,6 +1,153 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spwang.luck.tenmillion.Repository.RedCombinationRepository">
+    <resultMap id="BaseResultMap" type="com.spwang.luck.tenmillion.entity.RedCombination">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="one" jdbcType="VARCHAR" property="one"/>
+        <result column="two" jdbcType="VARCHAR" property="two"/>
+        <result column="three" jdbcType="VARCHAR" property="three"/>
+        <result column="four" jdbcType="VARCHAR" property="four"/>
+        <result column="five" jdbcType="VARCHAR" property="five"/>
+        <result column="six" jdbcType="VARCHAR" property="six"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from red_combination
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        delete from red_combination
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.spwang.luck.tenmillion.entity.RedCombination"
+            useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into red_combination (create_time, update_time, `status`,
+        one, two, three, four,
+        five, six)
+        values (#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
+        #{one,jdbcType=VARCHAR}, #{two,jdbcType=VARCHAR}, #{three,jdbcType=VARCHAR}, #{four,jdbcType=VARCHAR},
+        #{five,jdbcType=VARCHAR}, #{six,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.spwang.luck.tenmillion.entity.RedCombination" useGeneratedKeys="true">
+        <!--@mbg.generated-->
+        insert into red_combination
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="one != null and one != ''">
+                one,
+            </if>
+            <if test="two != null and two != ''">
+                two,
+            </if>
+            <if test="three != null and three != ''">
+                three,
+            </if>
+            <if test="four != null and four != ''">
+                four,
+            </if>
+            <if test="five != null and five != ''">
+                five,
+            </if>
+            <if test="six != null and six != ''">
+                six,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="one != null and one != ''">
+                #{one,jdbcType=VARCHAR},
+            </if>
+            <if test="two != null and two != ''">
+                #{two,jdbcType=VARCHAR},
+            </if>
+            <if test="three != null and three != ''">
+                #{three,jdbcType=VARCHAR},
+            </if>
+            <if test="four != null and four != ''">
+                #{four,jdbcType=VARCHAR},
+            </if>
+            <if test="five != null and five != ''">
+                #{five,jdbcType=VARCHAR},
+            </if>
+            <if test="six != null and six != ''">
+                #{six,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.spwang.luck.tenmillion.entity.RedCombination">
+        <!--@mbg.generated-->
+        update red_combination
+        <set>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="one != null and one != ''">
+                one = #{one,jdbcType=VARCHAR},
+            </if>
+            <if test="two != null and two != ''">
+                two = #{two,jdbcType=VARCHAR},
+            </if>
+            <if test="three != null and three != ''">
+                three = #{three,jdbcType=VARCHAR},
+            </if>
+            <if test="four != null and four != ''">
+                four = #{four,jdbcType=VARCHAR},
+            </if>
+            <if test="five != null and five != ''">
+                five = #{five,jdbcType=VARCHAR},
+            </if>
+            <if test="six != null and six != ''">
+                six = #{six,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.spwang.luck.tenmillion.entity.RedCombination">
+        <!--@mbg.generated-->
+        update red_combination
+        set create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        `status` = #{status,jdbcType=INTEGER},
+        one = #{one,jdbcType=VARCHAR},
+        two = #{two,jdbcType=VARCHAR},
+        three = #{three,jdbcType=VARCHAR},
+        four = #{four,jdbcType=VARCHAR},
+        five = #{five,jdbcType=VARCHAR},
+        six = #{six,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
     <sql id="Base_Column_List">
             id,
             one,
@@ -13,21 +160,15 @@
             update_time,
             `status`
     </sql>
-    <resultMap id="BaseResultMap" type="com.spwang.luck.tenmillion.entity.RedCombination">
-        <result column="id" property="id"/>
-        <result column="one" property="one"/>
-        <result column="two" property="two"/>
-        <result column="three" property="three"/>
-        <result column="four" property="four"/>
-        <result column="five" property="five"/>
-        <result column="six" property="six"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-        <result column="status" property="status"/>
-    </resultMap>
 
-<!--auto generated by MybatisCodeHelper on 2019-07-21-->
-    <insert id="insertList" useGeneratedKeys="true" keyProperty="id">
+    <!--auto generated by MybatisCodeHelper on 2019-07-22-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from red_combination
+    </select>
+
+    <!--auto generated by MybatisCodeHelper on 2019-07-22-->
+    <insert id="insertList">
         INSERT INTO red_combination(
         one,
         two,
@@ -35,28 +176,24 @@
         four,
         five,
         six,
+        id,
         create_time,
         update_time,
         status
         )VALUES
         <foreach collection="list" item="element" index="index" separator=",">
             (
-            #{element.one},
-            #{element.two},
-            #{element.three},
-            #{element.four},
-            #{element.five},
-            #{element.six},
-            #{element.createTime},
-            #{element.updateTime},
-            #{element.status}
+            #{element.one,jdbcType=VARCHAR},
+            #{element.two,jdbcType=VARCHAR},
+            #{element.three,jdbcType=VARCHAR},
+            #{element.four,jdbcType=VARCHAR},
+            #{element.five,jdbcType=VARCHAR},
+            #{element.six,jdbcType=VARCHAR},
+            #{element.id,jdbcType=BIGINT},
+            #{element.createTime,jdbcType=TIMESTAMP},
+            #{element.updateTime,jdbcType=TIMESTAMP},
+            #{element.status,jdbcType=INTEGER}
             )
         </foreach>
     </insert>
-
-<!--auto generated by MybatisCodeHelper on 2019-07-21-->
-    <select id="count" resultType="java.lang.Long">
-        select count(*)
-        from red_combination
-    </select>
 </mapper>

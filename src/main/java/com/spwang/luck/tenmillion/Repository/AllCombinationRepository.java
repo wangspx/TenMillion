@@ -15,11 +15,17 @@ import java.util.List;
 public interface AllCombinationRepository {
     Long count();
 
-    Long save(AllCombination allCombination);
+    int deleteByPrimaryKey(Long id);
 
-    Long saveAll(List<AllCombination> list);
+    int insert(AllCombination record);
 
-    List<AllCombination> selectAllById(@Param("id") Long id);
+    int insertSelective(AllCombination record);
 
     int insertList(@Param("list")List<AllCombination> list);
+
+    AllCombination selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(AllCombination record);
+
+    int updateByPrimaryKey(AllCombination record);
 }

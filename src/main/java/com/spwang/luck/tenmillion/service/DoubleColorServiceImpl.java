@@ -1,11 +1,9 @@
 package com.spwang.luck.tenmillion.service;
 
+import com.spwang.luck.tenmillion.Repository.AllCombinationRepository;
 import com.spwang.luck.tenmillion.Repository.RedCombinationRepository;
 import com.spwang.luck.tenmillion.entity.AllCombination;
-import com.spwang.luck.tenmillion.entity.RedCombination;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Component;
 
@@ -30,11 +28,11 @@ public class DoubleColorServiceImpl {
 
     private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
 
-//    @Resource
-//    private AllCombinationRepository allCombinationRepository;
-//
-//    @Resource
-//    private RedCombinationRepository redCombinationRepository;
+    @Resource
+    private AllCombinationRepository allCombinationRepository;
+
+    @Resource
+    private RedCombinationRepository redCombinationRepository;
 
     @Resource
     private SqlSessionTemplate sqlSessionTemplate;
@@ -47,49 +45,41 @@ public class DoubleColorServiceImpl {
         }
         int k = 6;
         combine(0, k, com);
-
         System.out.println(result.size());
 
-
-        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
-        RedCombinationRepository redCombinationRepository = sqlSession.getMapper(RedCombinationRepository.class);
-
-        long start = System.currentTimeMillis();
-        List<RedCombination> list = new ArrayList<>(100032);
-        result.forEach(s -> {
-            RedCombination redCombination = new RedCombination();
-            redCombination.setOne(s.substring(0,1));
-            redCombination.setTwo(s.substring(2,3));
-            redCombination.setThree(s.substring(4,5));
-            redCombination.setFour(s.substring(6,7));
-            redCombination.setFive(s.substring(8,9));
-            redCombination.setSix(s.substring(10,11));
-            redCombination.setUpdateTime(new Date());
-            list.add(redCombination);
-            if (list.size() >= 100000) {
-                long start1 = System.currentTimeMillis();
-                redCombinationRepository.insertList(list);
-                sqlSession.commit();
-                System.out.println(System.currentTimeMillis() - start1);
-                list.clear();
-            }
-        });
-        redCombinationRepository.insertList(list);
-        sqlSession.commit();
-        System.out.println(System.currentTimeMillis() - start);
-
-
-
-
-//        List<AllCombination> list = new ArrayList<>(100032);
-//        for (String s : result) {
-//            addBlue(list, s);
+//        long start = System.currentTimeMillis();
+//        List<RedCombination> list = new ArrayList<>(100032);
+//        result.forEach(s -> {
+//            RedCombination redCombination = new RedCombination();
+//            redCombination.setOne(s.substring(0,2));
+//            redCombination.setTwo(s.substring(2,4));
+//            redCombination.setThree(s.substring(4,6));
+//            redCombination.setFour(s.substring(6,8));
+//            redCombination.setFive(s.substring(8,10));
+//            redCombination.setSix(s.substring(10,12));
+//            redCombination.setUpdateTime(new Date());
+//            redCombination.setCreateTime(new Date());
+//            list.add(redCombination);
 //            if (list.size() >= 100000) {
-//                allCombinationRepository.saveAll(list);
-//                System.out.println("提交一次事务，数据总条数：" + allCombinationRepository.count());
+//                long start1 = System.currentTimeMillis();
+//                redCombinationRepository.insertList(list);
+//                System.out.println(System.currentTimeMillis() - start1);
 //                list.clear();
 //            }
-//        }
+//        });
+//        redCombinationRepository.insertList(list);
+//        System.out.println(System.currentTimeMillis() - start);
+
+        List<AllCombination> list = new ArrayList<>(10032);
+        for (String s : result) {
+            addBlue(list, s);
+            if (list.size() >= 10000) {
+                allCombinationRepository.insertList(list);
+                System.out.println("提交一次事务，数据总条数：" + allCombinationRepository.count());
+                list.clear();
+            }
+        }
+        allCombinationRepository.insertList(list);
     }
 
     /**
@@ -120,6 +110,7 @@ public class DoubleColorServiceImpl {
         for (int i = 1; i <= 16; i++) {
             AllCombination entity = new AllCombination();
             entity.setCombination(s + String.format("%02d", i));
+            entity.setCreateTime(new Date());
             list.add(entity);
         }
     }
