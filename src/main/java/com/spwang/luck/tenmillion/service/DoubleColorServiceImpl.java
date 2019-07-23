@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.sleep;
 
@@ -36,7 +37,7 @@ public class DoubleColorServiceImpl implements DoubleColorService {
     }
 
     private void start() {
-        log.info("start...");
+        log.debug("InitializingData...");
         String[] redBox = new String[33];
         for (int i = 0; i < 33; i++) {
             redBox[i] = String.format("%02d", i + 1);
@@ -47,7 +48,7 @@ public class DoubleColorServiceImpl implements DoubleColorService {
         combine(result, 0, k, redBox);
         log.info(String.format("6红球所有组合：%d", result.size()));
 
-        BlockingQueue<AllCombination> product = new ArrayBlockingQueue(10000);
+        BlockingQueue<AllCombination> product = new ArrayBlockingQueue(1000);
         fixedThreadPool.submit(new Producer(product, result));
 
         fixedThreadPool.submit(new Consumer(product));
@@ -83,6 +84,7 @@ public class DoubleColorServiceImpl implements DoubleColorService {
         }
 
         public void run() {
+            AtomicInteger sum = new AtomicInteger();
             this.list.forEach(s -> {
                 for (int i = 1; i <= 16; i++) {
                     AllCombination entity = new AllCombination();
@@ -90,11 +92,13 @@ public class DoubleColorServiceImpl implements DoubleColorService {
                     entity.setCreateTime(new Date());
                     try {
                         product.put(entity);
+                        sum.getAndIncrement();
                     } catch (InterruptedException e) {
-                        log.error("队列插入失败", e);
+                        log.error("队列插入数据失败", e);
                     }
                 }
             });
+            log.debug("一共生产了{}数据", sum.get());
         }
     }
 
@@ -107,27 +111,27 @@ public class DoubleColorServiceImpl implements DoubleColorService {
 
         public void run() {
             List<AllCombination> list = new ArrayList<>(1032);
-            int i = 3;
-            while (i > 0) {
+            boolean done = false;
+            while (!done) {
                 try {
-                    AllCombination poll = product.poll(3, TimeUnit.SECONDS);
-                    if (poll != null) {
-                        list.add(product.take());
+                    AllCombination product = this.product.poll(3, TimeUnit.SECONDS);
+                    if (product != null) {
+                        list.add(product);
                     } else {
-                        i--;
+                        done = true;
                     }
                 } catch (InterruptedException e) {
                     log.error("队列取值异常", e);
                 }
                 if (list.size() >= 1000) {
                     allCombinationMapper.insertList(list);
-                    log.info("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
+                    log.debug("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
                     list.clear();
                 }
             }
             if (list.size() > 0) {
                 allCombinationMapper.insertList(list);
-                log.info("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
+                log.debug("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
             }
         }
     }
