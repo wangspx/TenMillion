@@ -12,7 +12,7 @@ import java.util.List;
  * @since 0.0.1
  */
 @Mapper
-public interface AllCombinationRepository {
+public interface AllCombinationMapper {
     Long count();
 
     int deleteByPrimaryKey(Long id);

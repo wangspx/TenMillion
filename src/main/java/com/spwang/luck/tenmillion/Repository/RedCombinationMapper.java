@@ -12,7 +12,7 @@ import java.util.List;
  * @since 0.0.1
  */
 @Mapper
-public interface RedCombinationRepository {
+public interface RedCombinationMapper {
     int deleteByPrimaryKey(Long id);
 
     int insert(RedCombination record);

@@ -1,5 +1,5 @@
 package com.spwang.luck.tenmillion;
-import com.spwang.luck.tenmillion.Repository.AllCombinationRepository;
+import com.spwang.luck.tenmillion.Repository.AllCombinationMapper;
 import com.spwang.luck.tenmillion.service.DoubleColorServiceImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -12,11 +12,13 @@ import javax.annotation.Resource;
  * @since 0.0.1
  */
 @Component
-public class InitData implements InitializingBean {
+public class InitializingData implements InitializingBean {
+
     @Resource
     private DoubleColorServiceImpl service;
-    @org.springframework.beans.factory.annotation.Autowired
-    private AllCombinationRepository allCombinationRepository;
+
+    @Resource
+    private AllCombinationMapper allCombinationMapper;
 
     @Override
     public void afterPropertiesSet() throws Exception {

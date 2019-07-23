@@ -1,6 +1,6 @@
 package com.spwang.luck.tenmillion.service;
 
-import com.spwang.luck.tenmillion.Repository.AllCombinationRepository;
+import com.spwang.luck.tenmillion.Repository.AllCombinationMapper;
 import com.spwang.luck.tenmillion.entity.AllCombination;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
+
+import static java.lang.Thread.sleep;
 
 /**
  * @author spwang 2019/7/20 12:56 PM
@@ -26,7 +28,7 @@ public class DoubleColorServiceImpl implements DoubleColorService {
     private ExecutorService fixedThreadPool = Executors.newCachedThreadPool();
 
     @Resource
-    private AllCombinationRepository allCombinationRepository;
+    private AllCombinationMapper allCombinationMapper;
 
     @Override
     public void generateAllCombination() {
@@ -48,6 +50,7 @@ public class DoubleColorServiceImpl implements DoubleColorService {
         BlockingQueue<AllCombination> product = new ArrayBlockingQueue(10000);
         fixedThreadPool.submit(new Producer(product, result));
 
+        fixedThreadPool.submit(new Consumer(product));
         fixedThreadPool.submit(new Consumer(product));
         fixedThreadPool.submit(new Consumer(product));
         fixedThreadPool.submit(new Consumer(product));
@@ -85,7 +88,11 @@ public class DoubleColorServiceImpl implements DoubleColorService {
                     AllCombination entity = new AllCombination();
                     entity.setCombination(s + String.format("%02d", i));
                     entity.setCreateTime(new Date());
-                    product.add(entity);
+                    try {
+                        product.put(entity);
+                    } catch (InterruptedException e) {
+                        log.error("队列插入失败", e);
+                    }
                 }
             });
         }
@@ -100,26 +107,26 @@ public class DoubleColorServiceImpl implements DoubleColorService {
 
         public void run() {
             List<AllCombination> list = new ArrayList<>(1032);
-            boolean done = false;
-            while (!done) {
+            int i = 3;
+            while (i > 0) {
                 try {
                     AllCombination poll = product.poll(3, TimeUnit.SECONDS);
                     if (poll != null) {
                         list.add(product.take());
                     } else {
-                        done = true;
+                        i--;
                     }
                 } catch (InterruptedException e) {
                     log.error("队列取值异常", e);
                 }
                 if (list.size() >= 1000) {
-                    allCombinationRepository.insertList(list);
+                    allCombinationMapper.insertList(list);
                     log.info("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
                     list.clear();
                 }
             }
             if (list.size() > 0) {
-                allCombinationRepository.insertList(list);
+                allCombinationMapper.insertList(list);
                 log.info("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
             }
         }
