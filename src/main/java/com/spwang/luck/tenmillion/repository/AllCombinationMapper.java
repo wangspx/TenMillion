@@ -1,6 +1,6 @@
-package com.spwang.luck.tenmillion.Repository;
+package com.spwang.luck.tenmillion.repository;
 
-import com.spwang.luck.tenmillion.Repository.entity.AllCombination;
+import com.spwang.luck.tenmillion.repository.entity.AllCombination;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 

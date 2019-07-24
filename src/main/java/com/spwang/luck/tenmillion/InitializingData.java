@@ -1,6 +1,6 @@
 package com.spwang.luck.tenmillion;
 
-import com.spwang.luck.tenmillion.Repository.AllCombinationMapper;
+import com.spwang.luck.tenmillion.repository.AllCombinationMapper;
 import com.spwang.luck.tenmillion.service.DoubleColorServiceImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.spwang.luck.tenmillion.Repository.entity;
+package com.spwang.luck.tenmillion.repository.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
