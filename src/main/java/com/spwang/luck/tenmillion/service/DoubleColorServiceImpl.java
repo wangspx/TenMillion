@@ -1,7 +1,7 @@
 package com.spwang.luck.tenmillion.service;
 
 import com.spwang.luck.tenmillion.Repository.AllCombinationMapper;
-import com.spwang.luck.tenmillion.entity.AllCombination;
+import com.spwang.luck.tenmillion.Repository.entity.AllCombination;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

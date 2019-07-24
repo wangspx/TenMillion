@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spwang.luck.tenmillion.Repository.RedCombinationMapper">
-    <resultMap id="BaseResultMap" type="com.spwang.luck.tenmillion.entity.RedCombination">
+    <resultMap id="BaseResultMap" type="com.spwang.luck.tenmillion.Repository.entity.RedCombination">
         <!--@mbg.generated-->
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="one" jdbcType="VARCHAR" property="one"/>
@@ -27,7 +27,7 @@
         delete from red_combination
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.spwang.luck.tenmillion.entity.RedCombination"
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.spwang.luck.tenmillion.Repository.entity.RedCombination"
             useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into red_combination (create_time, update_time, `status`,
@@ -38,7 +38,7 @@
         #{five,jdbcType=VARCHAR}, #{six,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" keyColumn="id" keyProperty="id"
-            parameterType="com.spwang.luck.tenmillion.entity.RedCombination" useGeneratedKeys="true">
+            parameterType="com.spwang.luck.tenmillion.Repository.entity.RedCombination" useGeneratedKeys="true">
         <!--@mbg.generated-->
         insert into red_combination
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -100,7 +100,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.spwang.luck.tenmillion.entity.RedCombination">
+    <update id="updateByPrimaryKeySelective" parameterType="com.spwang.luck.tenmillion.Repository.entity.RedCombination">
         <!--@mbg.generated-->
         update red_combination
         <set>
@@ -134,7 +134,7 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.spwang.luck.tenmillion.entity.RedCombination">
+    <update id="updateByPrimaryKey" parameterType="com.spwang.luck.tenmillion.Repository.entity.RedCombination">
         <!--@mbg.generated-->
         update red_combination
         set create_time = #{createTime,jdbcType=TIMESTAMP},

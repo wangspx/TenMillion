@@ -1,6 +1,5 @@
-package com.spwang.luck.tenmillion.entity;
+package com.spwang.luck.tenmillion.Repository.entity;
 
-import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
