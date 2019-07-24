@@ -1,4 +1,5 @@
 package com.spwang.luck.tenmillion;
+
 import com.spwang.luck.tenmillion.Repository.AllCombinationMapper;
 import com.spwang.luck.tenmillion.service.DoubleColorServiceImpl;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,6 +15,9 @@ import javax.annotation.Resource;
 @Component
 public class InitializingData implements InitializingBean {
 
+    /** 所有双色球组合数量 */
+    private static final int ALL_COMBINATION_LENGTH = 17721088;
+
     @Resource
     private DoubleColorServiceImpl service;
 
@@ -22,6 +26,8 @@ public class InitializingData implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        service.generateAllCombination();
+        if (allCombinationMapper.count() != ALL_COMBINATION_LENGTH) {
+            service.generateAllCombination();
+        }
     }
 }
