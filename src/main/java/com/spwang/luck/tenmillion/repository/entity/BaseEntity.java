@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 public class BaseEntity {
     /** 自增长主键 */
-    protected Long id;
+    protected Integer id;
     /** 创建时间 */
     protected Date createTime;
     /** 更新时间 */

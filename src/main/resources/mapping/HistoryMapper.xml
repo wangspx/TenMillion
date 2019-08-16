@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spwang.luck.tenmillion.repository.HistoryMapper">
+  <resultMap id="BaseResultMap" type="com.spwang.luck.tenmillion.repository.entity.History">
+    <!--@mbg.generated-->
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="combination_id" jdbcType="INTEGER" property="combinationId" />
+    <result column="combination" jdbcType="VARCHAR" property="combination" />
+    <result column="open_date" jdbcType="TIMESTAMP" property="openDate" />
+  </resultMap>
+  <insert id="insert" parameterType="com.spwang.luck.tenmillion.repository.entity.History">
+    <!--@mbg.generated-->
+    insert into history (id, `number`, combination_id, 
+      combination, open_date)
+    values (#{id,jdbcType=INTEGER}, #{number,jdbcType=INTEGER}, #{combinationId,jdbcType=INTEGER}, 
+      #{combination,jdbcType=VARCHAR}, #{openDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.spwang.luck.tenmillion.repository.entity.History">
+    <!--@mbg.generated-->
+    insert into history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="number != null">
+        `number`,
+      </if>
+      <if test="combinationId != null">
+        combination_id,
+      </if>
+      <if test="combination != null and combination != ''">
+        combination,
+      </if>
+      <if test="openDate != null">
+        open_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="combinationId != null">
+        #{combinationId,jdbcType=INTEGER},
+      </if>
+      <if test="combination != null and combination != ''">
+        #{combination,jdbcType=VARCHAR},
+      </if>
+      <if test="openDate != null">
+        #{openDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>
