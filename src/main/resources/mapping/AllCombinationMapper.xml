@@ -97,6 +97,7 @@
   <insert id="insertList">
         INSERT INTO all_combination(
         id,
+        `sort`
         create_time,
         update_time,
         status,
@@ -105,6 +106,7 @@
         <foreach collection="list" item="element" index="index" separator=",">
             (
             #{element.id,jdbcType=BIGINT},
+            #{element.sort,jdbcType=INTEGER},
             #{element.createTime,jdbcType=TIMESTAMP},
             #{element.updateTime,jdbcType=TIMESTAMP},
             #{element.status,jdbcType=INTEGER},
