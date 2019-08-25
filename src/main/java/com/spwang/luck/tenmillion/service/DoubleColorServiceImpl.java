@@ -32,9 +32,6 @@ public class DoubleColorServiceImpl implements DoubleColorService {
     private ExecutorService fixedThreadPool = Executors.newCachedThreadPool();
 
     @Resource
-    private AllCombinationMapper allCombinationMapper;
-
-    @Resource
     private KafkaTemplate<String, Combination> kafkaTemplate;
 
     @Override

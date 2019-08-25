@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS all_combination;
 CREATE TABLE all_combination
 (
     id          bigint(15)  auto_increment comment '自增长主键' primary key,
+    `sort` int(11) NULL DEFAULT NULL COMMENT '序号',
     combination varchar(14) null comment '6个红球和1个篮球的组合',
     create_time datetime    null comment '创建时间',
     update_time timestamp   null comment '更新时间',
