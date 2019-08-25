@@ -50,17 +50,19 @@ public class DoubleColorServiceImpl implements DoubleColorService {
         combine(0, k, redBox);
         log.debug("generate red combination done...");
 
-        redCombination.forEach(red -> {
-            for (int j = 1; j <= 16; j++) {
-                Combination entity = new Combination();
-                entity.setSort(index++);
-                entity.setCombination(String.format("%s%02d", red, j));
-                entity.setCreateTime(new Date());
-                kafkaTemplate.send("luck", entity);
-            }
-            log.debug(red);
+        fixedThreadPool.execute(()->{
+            redCombination.forEach(red -> {
+                for (int j = 1; j <= 16; j++) {
+                    Combination entity = new Combination();
+                    entity.setSort(index++);
+                    entity.setCombination(String.format("%s%02d", red, j));
+                    entity.setCreateTime(new Date());
+                    kafkaTemplate.send("luck", entity);
+                }
+                log.debug(red);
+            });
+            log.debug("kafka done...");
         });
-        log.debug("kafka done...");
     }
 
     private void combine(int index, int k, String... arr) {
