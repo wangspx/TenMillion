@@ -1,6 +1,6 @@
 package com.spwang.luck.tenmillion.repository;
 
-import com.spwang.luck.tenmillion.repository.entity.AllCombination;
+import com.spwang.luck.tenmillion.repository.entity.Combination;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,15 +17,15 @@ public interface AllCombinationMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(AllCombination record);
+    int insert(Combination record);
 
-    int insertSelective(AllCombination record);
+    int insertSelective(Combination record);
 
-    int insertList(@Param("list")List<AllCombination> list);
+    int insertList(@Param("list")List<Combination> list);
 
-    AllCombination selectByPrimaryKey(Long id);
+    Combination selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(AllCombination record);
+    int updateByPrimaryKeySelective(Combination record);
 
-    int updateByPrimaryKey(AllCombination record);
+    int updateByPrimaryKey(Combination record);
 }

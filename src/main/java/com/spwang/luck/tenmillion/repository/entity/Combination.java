@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AllCombination extends BaseEntity {
+public class Combination extends BaseEntity implements Serializable {
     /**
      * 组合排序
      */
