@@ -1,0 +1,25 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      batch-size: 4096
+      buffer-memory: 40960
+      retries: 1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: com.spwang.luck.tenmillion.kafka.ObjectSerializer
+    consumer:
+      auto-commit-interval: 1000
+      enable-auto-commit: false
+      max-poll-records: 10
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: com.spwang.luck.tenmillion.kafka.ObjectDeserializer
+  datasource:
+    url: jdbc:mysql://localhost:9000/luck?serverTimezone=GMT%2B8&useUnicode=true&&characterEncoding=UTF-8
+    username: root
+    password: spwang@1231
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+
+logging:
+  level:
+    root: debug
