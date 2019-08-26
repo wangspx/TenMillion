@@ -1,7 +1,5 @@
 package com.spwang.luck.tenmillion.service;
 
-import com.spwang.luck.tenmillion.repository.AllCombinationMapper;
-import com.spwang.luck.tenmillion.repository.entity.Combination;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.kafka.core.KafkaTemplate;

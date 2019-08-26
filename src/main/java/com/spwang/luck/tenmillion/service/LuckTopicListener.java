@@ -53,7 +53,7 @@ public class LuckTopicListener {
     @KafkaListener(id = "0", topics = "luck",containerFactory = "batchContainerFactory")
     public void listen(List<ConsumerRecord<String, Combination>> records) throws Exception {
         List<Combination> list = records.stream().map(ConsumerRecord::value).collect(Collectors.toList());
-        allCombinationMapper.insertList(list);
+        allCombinationMapper.batchInsert(list);
         log.debug("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
     }
 
