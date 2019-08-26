@@ -1,14 +1,16 @@
 package com.spwang.luck.tenmillion.repository.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
 /**
+ * 
+ *
  * @author spwang
+ * @date 2019/8/26 12:02
  * @version 1.0.0
- * @date 2019/7/22 12:03
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
