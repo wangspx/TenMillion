@@ -27,7 +27,7 @@ public class InitializingData implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (allCombinationMapper.count() != ALL_COMBINATION_LENGTH) {
-//            service.generateAllCombination();
+            service.generateAllCombination();
         }
     }
 }
