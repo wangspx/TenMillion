@@ -1,6 +1,7 @@
 package com.spwang.luck.tenmillion.repository;
 
 import com.spwang.luck.tenmillion.repository.entity.Combination;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @version 1.0.0
  * @date 2019/8/26 12:02
  */
+@Mapper
 public interface AllCombinationMapper {
     int deleteByPrimaryKey(Long id);
 

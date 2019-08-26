@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @Slf4j
-@Service
+//@Service
 public class LuckTopicListener {
 
     @Resource
