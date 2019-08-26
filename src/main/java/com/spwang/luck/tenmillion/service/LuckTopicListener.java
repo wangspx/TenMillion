@@ -5,13 +5,22 @@ import com.spwang.luck.tenmillion.repository.AllCombinationMapper;
 import com.spwang.luck.tenmillion.repository.entity.Combination;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.config.KafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author spwang on 2019-08-25 at 23:22
@@ -22,21 +31,36 @@ import java.util.List;
 @Service
 public class LuckTopicListener {
 
-    private final List<Combination> list = new ArrayList<>(1200);
-
     @Resource
     private AllCombinationMapper allCombinationMapper;
 
-    @KafkaListener(id = "0", topics = "luck")
-    public void listen(ConsumerRecord<String, Combination> record) throws Exception {
-        list.add(record.value());
-        if (list.size() > 1000) {
-            synchronized (list) {
-                allCombinationMapper.insertList(list);
-                log.debug("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
-                list.clear();
-            }
-        }
+    /**
+     * <p>
+     * 开启kafka消费者批量处理
+     * </p>
+     *
+     * ContainerFactory默认配置
+     * <br>
+     * {@link org.springframework.boot.autoconfigure.kafka.KafkaAnnotationDrivenConfiguration#kafkaListenerContainerFactory}
+     *
+     * @param kafkaConsumerFactory kafka配置
+     * @return 返回kafka批量处理bean
+     */
+    @Bean
+    KafkaListenerContainerFactory<?> batchContainerFactory(@Autowired ConsumerFactory<Object, Object> kafkaConsumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(kafkaConsumerFactory);
+        //开启批量读取
+        factory.setBatchListener(true);
+        return factory;
+    }
+
+
+    @KafkaListener(id = "0", topics = "luck",containerFactory = "batchContainerFactory")
+    public void listen(List<ConsumerRecord<String, Combination>> records) throws Exception {
+        List<Combination> list = records.stream().map(ConsumerRecord::value).collect(Collectors.toList());
+        allCombinationMapper.insertList(list);
+        log.debug("{} -> 提交一次事务，数据总条数：{}", Thread.currentThread().getName(), list.size());
     }
 
 }
