@@ -15,7 +15,7 @@ import java.util.stream.Collector;
 @Slf4j
 public abstract class RedCombination {
 
-    private static final int RED_COUNT = 1107568;
+    private final int index = 0;
 
     /**
      * 生成红球所有组合
@@ -27,9 +27,10 @@ public abstract class RedCombination {
     /**
      * 红球组合处理
      *
+     * @param index 组合序号
      * @param Combination 红球组合
      */
-    abstract void resultHandler(List<String> Combination);
+    abstract void resultHandler(Integer index, List<String> Combination);
 
     private void generateRedCombination() {
         List<String> tmp = new ArrayList<>();
@@ -49,7 +50,7 @@ public abstract class RedCombination {
             for (int i = index; i < arr.length; i++) {
                 tmp.add(arr[i]);
 
-                resultHandler(tmp);
+                resultHandler(index++, tmp);
 
                 tmp.remove(arr[i]);
             }

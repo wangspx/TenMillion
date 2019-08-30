@@ -21,9 +21,7 @@ import java.util.concurrent.Executors;
 @Service
 public class DoubleColorServiceImpl implements DoubleColorService {
 
-    private Integer index = 1;
-
-    private ExecutorService fixedThreadPool = Executors.newCachedThreadPool();
+    private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
 
     @Resource
     private KafkaTemplate<String, Combination> kafkaTemplate;
@@ -33,47 +31,33 @@ public class DoubleColorServiceImpl implements DoubleColorService {
 
     @Override
     public void generateRedCombination() {
-        final Integer i = 0;
         new RedCombination() {
             @Override
-            void resultHandler(List<String> Combination) {
-                log.info(StringUtils.join(Combination, ""));
-//                kafkaTemplate2.send("red", i[0]++, StringUtils.join(Combination, ""));
+            void resultHandler(Integer index, List<String> Combination) {
+                kafkaTemplate2.send("red", index, StringUtils.join(Combination, ""));
             }
         }.generate();
     }
 
     @Override
     public void generateAllCombination() {
-//        list.forEach(red -> {
-//            fixedThreadPool.execute(()-> {
-//                for (int j = 1; j <= 16; j++) {
-//                    Combination entity = new Combination();
-//                    entity.setSort(index++);
-//                    entity.setCombination(String.format("%s%02d", red, j));
-//                    entity.setCreateTime(new Date());
-//                    kafkaTemplate.send("luck", entity);
-//                }
-//                log.debug(red);
-//            });
-//        });
+        new RedCombination() {
+            @Override
+            void resultHandler(Integer index, List<String> Combination) {
+                int currentIndex = index * 16;
+                String red = StringUtils.join(Combination, "");
+
+                for (int j = 1; j <= 16; j++) {
+                    Combination entity = new Combination();
+                    entity.setSort(currentIndex++);
+                    entity.setCombination(String.format("%s%02d", red, j));
+                    entity.setCreateTime(new Date());
+
+                    fixedThreadPool.execute(() -> {
+                        kafkaTemplate.send("luck", entity);
+                    });
+                }
+            }
+        }.generate();
     }
-//
-//    private void start() {
-//        log.debug("InitializingData...");
-//
-//        fixedThreadPool.execute(()->{
-//            redCombination.forEach(red -> {
-//                for (int j = 1; j <= 16; j++) {
-//                    Combination entity = new Combination();
-//                    entity.setSort(index++);
-//                    entity.setCombination(String.format("%s%02d", red, j));
-//                    entity.setCreateTime(new Date());
-//                    kafkaTemplate.send("luck", entity);
-//                }
-//                log.debug(red);
-//            });
-//            log.debug("kafka done...");
-//        });
-//    }
 }

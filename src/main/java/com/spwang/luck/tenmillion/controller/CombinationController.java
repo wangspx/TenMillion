@@ -18,10 +18,13 @@ public class CombinationController implements VersionController {
     @Resource
     private DoubleColorServiceImpl service;
 
-    @GetMapping("/red/generate")
+    @GetMapping("/generate/red")
     public void redCombination() {
         service.generateRedCombination();
     }
 
-
+    @GetMapping("/generate/all")
+    public void allCombination() {
+        service.generateAllCombination();
+    }
 }
