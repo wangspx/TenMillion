@@ -176,9 +176,6 @@
         four,
         five,
         six,
-        id,
-        create_time,
-        update_time,
         status
         )VALUES
         <foreach collection="list" item="element" index="index" separator=",">
@@ -189,9 +186,6 @@
             #{element.four,jdbcType=VARCHAR},
             #{element.five,jdbcType=VARCHAR},
             #{element.six,jdbcType=VARCHAR},
-            #{element.id,jdbcType=BIGINT},
-            #{element.createTime,jdbcType=TIMESTAMP},
-            #{element.updateTime,jdbcType=TIMESTAMP},
             #{element.status,jdbcType=INTEGER}
             )
         </foreach>
