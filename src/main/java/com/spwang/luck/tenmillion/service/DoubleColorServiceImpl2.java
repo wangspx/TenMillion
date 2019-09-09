@@ -29,7 +29,7 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
     private AtomicInteger sum = new AtomicInteger();
 
-    private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
+    private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(6);
 
     @Override
     public void generateRedCombination() {
@@ -42,8 +42,6 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
     @Override
     public void generateAllCombination() {
-//        LinkedBlockingDeque<Combination> product = new LinkedBlockingDeque<Combination>();
-
         Stack<Combination> product = new Stack<>();
 
         fixedThreadPool.execute(() -> {
@@ -59,15 +57,17 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
                         entity.setCombination(String.format("%s%02d", red, j));
                         product.push(entity);
                     }
+
+                    if (product.size() > 20000) {
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }.generate();
         });
-
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         for (int i = 0; i < 5; i++) {
             fixedThreadPool.execute(() -> {
@@ -78,17 +78,6 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
                 }
             });
         }
-
-        fixedThreadPool.execute(() -> {
-            while (!product.empty()) {
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                log.info("product -> {}", product.size());
-            }
-        });
     }
 
     private void consumer(Stack<Combination> product) throws InterruptedException {
@@ -98,16 +87,17 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
         while (isNotDone) {
             sum.incrementAndGet();
+
+            if (product.empty()) {
+                Thread.sleep(3000);
+                isNotDone = !product.empty();
+            }
             list.add(product.pop());
 
             if (list.size() > 1000) {
                 allCombinationMapper.batchInsert(list);
                 list.clear();
-            }
-
-            if (product.empty()) {
-                Thread.sleep(10000);
-                isNotDone = !product.empty();
+                log.info("product -> {}", product.size());
             }
         }
         if (list.size() > 0) {

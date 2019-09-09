@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collector;
 
 /**
@@ -15,7 +16,7 @@ import java.util.stream.Collector;
 @Slf4j
 public abstract class RedCombination {
 
-    private final int index = 0;
+    private int number;
 
     /**
      * 生成红球所有组合
@@ -50,7 +51,7 @@ public abstract class RedCombination {
             for (int i = index; i < arr.length; i++) {
                 tmp.add(arr[i]);
 
-                resultHandler(index++, tmp);
+                resultHandler(number++, tmp);
 
                 tmp.remove(arr[i]);
             }
