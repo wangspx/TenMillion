@@ -22,12 +22,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `history`;
 CREATE TABLE `history`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NULL DEFAULT NULL COMMENT '期号',
-  `combination_id` int(11) NULL DEFAULT NULL COMMENT '组合id',
-  `combination` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '组合',
-  `open_date` datetime(0) NULL DEFAULT NULL COMMENT '开奖日期',
-  PRIMARY KEY (`id`) USING BTREE
+    `id`             int(11)      NOT NULL AUTO_INCREMENT,
+    `number`         int(11)      NULL DEFAULT NULL COMMENT '期号',
+    `combination_id` int(11)      NULL DEFAULT NULL COMMENT '组合id',
+    `combination`    varchar(255) NULL DEFAULT NULL COMMENT '组合',
+    `open_date`      datetime(0)  NULL DEFAULT NULL COMMENT '开奖日期',
+    PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

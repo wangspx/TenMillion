@@ -1,18 +1,18 @@
 package com.spwang.luck.tenmillion.service;
 
-import com.alibaba.fastjson.JSON;
 import com.spwang.luck.tenmillion.repository.AllCombinationMapper;
 import com.spwang.luck.tenmillion.repository.entity.Combination;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import sun.misc.Queue;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,7 +26,7 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
     @Resource
     private AllCombinationMapper allCombinationMapper;
 
-    AtomicInteger sum = new AtomicInteger();
+    private AtomicInteger sum = new AtomicInteger();
 
     private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
 
@@ -54,7 +54,6 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
                         Combination entity = new Combination();
                         entity.setSort(currentIndex++);
                         entity.setCombination(String.format("%s%02d", red, j));
-                        entity.setCreateTime(new Date());
                         product.add(entity);
                     }
                 }
@@ -63,14 +62,18 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
         for (int i = 0; i < 5; i++) {
             fixedThreadPool.execute(() -> {
-                consumer(product);
+                try {
+                    consumer(product);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             });
         }
 
         fixedThreadPool.execute(() -> {
             while (sum.get() < 1771088) {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -79,15 +82,10 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
         });
     }
 
-    private void consumer(LinkedBlockingDeque<Combination> product) {
+    private void consumer(LinkedBlockingDeque<Combination> product) throws InterruptedException {
         List<Combination> list = new ArrayList<Combination>(1400);
 
-        Combination poll = null;
-        try {
-            poll = product.poll(3, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Combination poll = product.poll(3, TimeUnit.SECONDS);
         while (poll != null) {
             sum.incrementAndGet();
             list.add(poll);
@@ -95,11 +93,7 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
                 allCombinationMapper.batchInsert(list);
                 list.clear();
             }
-            try {
-                poll = product.poll(3, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            poll = product.poll(3, TimeUnit.SECONDS);
         }
         allCombinationMapper.batchInsert(list);
     }
