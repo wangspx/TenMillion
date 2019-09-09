@@ -1,5 +1,6 @@
 package com.spwang.luck.tenmillion.service;
 
+import com.alibaba.fastjson.JSON;
 import com.spwang.luck.tenmillion.repository.entity.Combination;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +19,7 @@ import java.util.concurrent.Executors;
  * @since 0.0.1
  */
 @Slf4j
-@Service
+@Service("doubleColorServiceImpl")
 public class DoubleColorServiceImpl implements DoubleColorService {
 
     private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
@@ -52,7 +53,6 @@ public class DoubleColorServiceImpl implements DoubleColorService {
                     entity.setSort(currentIndex++);
                     entity.setCombination(String.format("%s%02d", red, j));
                     entity.setCreateTime(new Date());
-
                     fixedThreadPool.execute(() -> {
                         kafkaTemplate.send("luck", entity);
                     });

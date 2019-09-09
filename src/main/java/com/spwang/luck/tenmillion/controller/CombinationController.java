@@ -1,6 +1,9 @@
 package com.spwang.luck.tenmillion.controller;
 
+import com.spwang.luck.tenmillion.service.DoubleColorService;
 import com.spwang.luck.tenmillion.service.DoubleColorServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +19,8 @@ import javax.annotation.Resource;
 public class CombinationController implements VersionController {
 
     @Resource
-    private DoubleColorServiceImpl service;
+    @Qualifier("doubleColorServiceImpl2")
+    private DoubleColorService service;
 
     @GetMapping("/generate/red")
     public void redCombination() {
