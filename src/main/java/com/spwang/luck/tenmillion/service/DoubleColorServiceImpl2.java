@@ -71,12 +71,16 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
         for (int i = 0; i < 5; i++) {
             fixedThreadPool.execute(() -> {
-                consumer(product);
+                try {
+                    consumer(product);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             });
         }
 
         fixedThreadPool.execute(() -> {
-            while (product.size() != 0) {
+            while (!product.empty()) {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
@@ -87,15 +91,23 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
         });
     }
 
-    private void consumer(Stack<Combination> product) {
+    private void consumer(Stack<Combination> product) throws InterruptedException {
         List<Combination> list = new ArrayList<>(1400);
 
-        while (!product.empty()) {
+        boolean isNotDone = true;
+
+        while (isNotDone) {
             sum.incrementAndGet();
             list.add(product.pop());
+
             if (list.size() > 1000) {
                 allCombinationMapper.batchInsert(list);
                 list.clear();
+            }
+
+            if (product.empty()) {
+                Thread.sleep(10000);
+                isNotDone = !product.empty();
             }
         }
         if (list.size() > 0) {
