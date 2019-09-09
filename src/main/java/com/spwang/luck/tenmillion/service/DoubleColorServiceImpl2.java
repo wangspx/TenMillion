@@ -42,12 +42,14 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
     @Override
     public void generateAllCombination() {
-        Stack<Combination> product = new Stack<>();
+        LinkedBlockingDeque<Combination> product = new LinkedBlockingDeque<>();
 
         fixedThreadPool.execute(() -> {
             new RedCombination() {
                 @Override
                 void resultHandler(Integer index, List<String> Combination) {
+                    waitConsumer(product);
+
                     int currentIndex = index * 16;
                     String red = StringUtils.join(Combination, "");
 
@@ -56,14 +58,6 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
                         entity.setSort(currentIndex++);
                         entity.setCombination(String.format("%s%02d", red, j));
                         product.push(entity);
-                    }
-
-                    if (product.size() > 20000) {
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
             }.generate();
@@ -80,25 +74,33 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
         }
     }
 
-    private void consumer(Stack<Combination> product) throws InterruptedException {
+    private void waitConsumer(LinkedBlockingDeque product) {
+        if (product.size() > 20000) {
+            try {
+                Thread.sleep(1000);
+                if (product.size() > 20000) {
+                    waitConsumer(product);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void consumer(LinkedBlockingDeque<Combination> product) throws InterruptedException {
         List<Combination> list = new ArrayList<>(1400);
 
-        boolean isNotDone = true;
-
-        while (isNotDone) {
+        Combination poll = product.poll(10, TimeUnit.SECONDS);
+        while (null != poll) {
             sum.incrementAndGet();
-
-            if (product.empty()) {
-                Thread.sleep(3000);
-                isNotDone = !product.empty();
-            }
-            list.add(product.pop());
 
             if (list.size() > 1000) {
                 allCombinationMapper.batchInsert(list);
                 list.clear();
                 log.info("product -> {}", product.size());
             }
+            list.add(poll);
+            poll = product.poll(10, TimeUnit.SECONDS);
         }
         if (list.size() > 0) {
             allCombinationMapper.batchInsert(list);
