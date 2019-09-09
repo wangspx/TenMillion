@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -41,7 +42,9 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
     @Override
     public void generateAllCombination() {
-        LinkedBlockingDeque<Combination> product = new LinkedBlockingDeque<Combination>();
+//        LinkedBlockingDeque<Combination> product = new LinkedBlockingDeque<Combination>();
+
+        Stack<Combination> product = new Stack<>();
 
         fixedThreadPool.execute(() -> {
             new RedCombination() {
@@ -54,47 +57,50 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
                         Combination entity = new Combination();
                         entity.setSort(currentIndex++);
                         entity.setCombination(String.format("%s%02d", red, j));
-                        product.add(entity);
+                        product.push(entity);
                     }
                 }
             }.generate();
         });
 
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         for (int i = 0; i < 5; i++) {
             fixedThreadPool.execute(() -> {
-                try {
-                    consumer(product);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                consumer(product);
             });
         }
 
         fixedThreadPool.execute(() -> {
-            while (sum.get() < 1771088) {
+            while (product.size() != 0) {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                log.info("sum -> {}", sum);
+                log.info("product -> {}", product.size());
             }
         });
     }
 
-    private void consumer(LinkedBlockingDeque<Combination> product) throws InterruptedException {
-        List<Combination> list = new ArrayList<Combination>(1400);
+    private void consumer(Stack<Combination> product) {
+        List<Combination> list = new ArrayList<>(1400);
 
-        Combination poll = product.poll(3, TimeUnit.SECONDS);
-        while (poll != null) {
+        while (!product.empty()) {
             sum.incrementAndGet();
-            list.add(poll);
+            list.add(product.pop());
             if (list.size() > 1000) {
                 allCombinationMapper.batchInsert(list);
                 list.clear();
             }
-            poll = product.poll(3, TimeUnit.SECONDS);
         }
-        allCombinationMapper.batchInsert(list);
+        if (list.size() > 0) {
+            allCombinationMapper.batchInsert(list);
+        }
+        log.info("consumer {} is stop", Thread.currentThread().getName());
     }
 }
