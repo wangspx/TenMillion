@@ -1,8 +1,6 @@
 package com.spwang.luck.tenmillion.controller;
 
 import com.spwang.luck.tenmillion.service.DoubleColorService;
-import com.spwang.luck.tenmillion.service.DoubleColorServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
