@@ -27,7 +27,7 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
     @Resource
     private AllCombinationMapper allCombinationMapper;
 
-    private AtomicInteger sum = new AtomicInteger();
+    private AtomicInteger sum = new AtomicInteger(17721088);
 
     private ExecutorService fixedThreadPool = Executors.newFixedThreadPool(6);
 
@@ -92,12 +92,12 @@ public class DoubleColorServiceImpl2 implements DoubleColorService {
 
         Combination poll = product.poll(10, TimeUnit.SECONDS);
         while (null != poll) {
-            sum.incrementAndGet();
+            sum.getAndDecrement();
 
             if (list.size() > 1000) {
                 allCombinationMapper.batchInsert(list);
                 list.clear();
-                log.info("product -> {}", product.size());
+                log.info("finish -> 17721088/{}", sum);
             }
             list.add(poll);
             poll = product.poll(10, TimeUnit.SECONDS);
