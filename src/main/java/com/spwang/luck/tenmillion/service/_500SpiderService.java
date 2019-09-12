@@ -24,7 +24,7 @@ public class _500SpiderService extends DoubleColorSpiderService<History> {
     private static final Pattern ISSUE_COMPILE = Pattern.compile(ISSUE_PATTERN);
 
     //    @Resource
-    private RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate;
 
     @Override
     public String getSource() {
